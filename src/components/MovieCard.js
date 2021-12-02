@@ -11,8 +11,9 @@ export default class MovieCard extends Component {
                 <Card className='my-3 mh-1'>
                     <Card.Img variant="top" src={`https://image.tmdb.org/t/p/original${movie.poster}`} className='p-3'/>
                     <Card.Body>
-                        <Card.Title>{movie.movie}</Card.Title>
+                        <Card.Title>{ movie.movie.endsWith('The') ? `The ${movie.movie.slice(0,-5)}` : movie.movie}</Card.Title>
                         <Card.Text>{movie.year}</Card.Text>
+                        <Card.Subtitle className="mb-2 text-muted">{movie.avgtotal}/100</Card.Subtitle>
                         <Button variant="primary">Go somewhere</Button>
                     </Card.Body>
                 </Card>

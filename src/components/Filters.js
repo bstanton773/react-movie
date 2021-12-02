@@ -8,6 +8,8 @@ const Range = createSliderWithTooltip(Slider.Range);
 
 export default class Filters extends Component {
     render() {
+        let today = new Date();
+        let thisYear = today.getFullYear();
         return (
             <Form>
                 <Form.Label>Providers: </Form.Label>
@@ -29,7 +31,7 @@ export default class Filters extends Component {
                 )}
                 </Form.Group>
                 <Form.Label>Year: </Form.Label>
-                <Range allowCross={false} min={1960} max={2021} defaultValue={[this.props.minYear, this.props.maxYear]} onChange={this.props.handleYearChange} ariaLabelGroupForHandles={[this.props.minYear, this.props.maxYear]} pushable={true}/>
+                <Range allowCross={false} min={1900} max={thisYear} defaultValue={[this.props.minYear, this.props.maxYear]} onChange={this.props.handleYearChange}/>
             </Form>
         )
     }

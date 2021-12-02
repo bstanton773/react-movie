@@ -8,6 +8,8 @@ import SearchBar from '../components/SearchBar';
 export default class Home extends Component {
     constructor(props) {
         super(props);
+        let today = new Date();
+        let thisYear = today.getFullYear() + 25;
         this.state = {
             movies: [],
             search: '',
@@ -16,8 +18,8 @@ export default class Home extends Component {
             selectedProviders: [],
             genres: ['Action', 'Adventure', 'Animation', 'Anime', 'Comedy', 'Comic', 'Crime', 'Disaster', 'Drama', 'Dramedy', 'Fantasy', 'Horror', 'Musical', 'Mystery', 'RomCom', 'Romance', 'Sci-Fi', 'Sports', 'Thriller', 'Western'],
             selectedGenres: [],
-            minYear: 1960,
-            maxYear: 2021
+            minYear: 1900,
+            maxYear: thisYear
         };
     }
 
@@ -91,7 +93,9 @@ export default class Home extends Component {
                 <Row>
                     <SearchBar search={this.state.search} handleSearch={this.handleSearch} />
                 </Row>
-                <Button variant="primary" onClick={() => this.setState({ displayFilters: !this.state.displayFilters })}>Show Filters</Button>
+                <Button variant="primary" onClick={() => this.setState({ displayFilters: !this.state.displayFilters })}>
+                    {this.state.displayFilters ? "Hide Filters" : "Show Filters"}
+                </Button>
                 <Row>
                     {this.state.displayFilters ? <Filters providers={this.state.providers} selectedProviders={this.state.selectedProviders} handleProviderChange={this.handleProviderChange} genres={this.state.genres} selectedGenres={this.state.selectedGenres} handleGenreChange={this.handleGenreChange} handleYearChange={this.handleYearChange} minYear={this.state.minYear} maxYear={this.state.maxYear} /> : null}
                 </Row>
