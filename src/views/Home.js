@@ -14,6 +14,8 @@ export default class Home extends Component {
             selectedProviders: [],
             genres: ['Action', 'Adventure', 'Animation', 'Anime', 'Comedy', 'Comic', 'Crime', 'Disaster', 'Drama', 'Dramedy', 'Fantasy', 'Horror', 'Musical', 'Mystery', 'RomCom', 'Romance', 'Sci-Fi', 'Sports', 'Thriller', 'Western'],
             selectedGenres: [],
+            minYear: 1960,
+            maxYear: 2021
         };
     }
 
@@ -27,11 +29,13 @@ export default class Home extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.search !== this.state.search || prevState.selectedProviders !== this.state.selectedProviders || prevState.selectedGenres !== this.state.selectedGenres) {
+        if (prevState.search !== this.state.search || prevState.selectedProviders !== this.state.selectedProviders || prevState.selectedGenres !== this.state.selectedGenres || prevState.minYear !== this.state.minYear || prevState.maxYear !== this.state.maxYear) {
             const search = this.state.search;
             const selectedProviders = this.state.selectedProviders.join(', ');
             const selectedGenres = this.state.selectedGenres.join(', ');
-            fetch(`/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}`)
+            const minYear = this.state.minYear;
+            const maxYear = this.state.maxYear;
+            fetch(`/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}`)
             .then(res => res.json())
             .then(data => {
                 console.log(data);
@@ -73,6 +77,12 @@ export default class Home extends Component {
         }
     }
 
+    handleYearChange = (e) => {
+        const minYear = e[0];
+        const maxYear = e[1];
+        this.setState({ minYear, maxYear });
+    }
+
     render() {
         return (
             <div>
@@ -80,7 +90,7 @@ export default class Home extends Component {
                     <SearchBar search={this.state.search} handleSearch={this.handleSearch} />
                 </Row>
                 <Row>
-                    <Filters providers={this.state.providers} handleProviderChange={this.handleProviderChange} genres={this.state.genres} handleGenreChange={this.handleGenreChange}/>
+                    <Filters providers={this.state.providers} handleProviderChange={this.handleProviderChange} genres={this.state.genres} handleGenreChange={this.handleGenreChange} handleYearChange={this.handleYearChange} minYear={this.state.minYear} maxYear={this.state.maxYear}/>
                 </Row>
                 <Row>
                 {this.state.movies.map(movie => <MovieCard key={movie.id} movie={movie} />)}
