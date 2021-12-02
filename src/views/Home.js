@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Filters from '../components/Filters';
 import MovieCard from '../components/MovieCard';
@@ -10,6 +11,7 @@ export default class Home extends Component {
         this.state = {
             movies: [],
             search: '',
+            displayFilters: false,
             providers: ['Amazon Prime', 'Disney+', 'HBO Max', 'Hulu', 'Netflix', 'Paramount+', 'Peacock', 'Peacock Premium', 'Showtime', 'Starz'],
             selectedProviders: [],
             genres: ['Action', 'Adventure', 'Animation', 'Anime', 'Comedy', 'Comic', 'Crime', 'Disaster', 'Drama', 'Dramedy', 'Fantasy', 'Horror', 'Musical', 'Mystery', 'RomCom', 'Romance', 'Sci-Fi', 'Sports', 'Thriller', 'Western'],
@@ -89,8 +91,9 @@ export default class Home extends Component {
                 <Row>
                     <SearchBar search={this.state.search} handleSearch={this.handleSearch} />
                 </Row>
+                <Button variant="primary" onClick={() => this.setState({ displayFilters: !this.state.displayFilters })}>Show Filters</Button>
                 <Row>
-                    <Filters providers={this.state.providers} handleProviderChange={this.handleProviderChange} genres={this.state.genres} handleGenreChange={this.handleGenreChange} handleYearChange={this.handleYearChange} minYear={this.state.minYear} maxYear={this.state.maxYear}/>
+                    {this.state.displayFilters ? <Filters providers={this.state.providers} selectedProviders={this.state.selectedProviders} handleProviderChange={this.handleProviderChange} genres={this.state.genres} selectedGenres={this.state.selectedGenres} handleGenreChange={this.handleGenreChange} handleYearChange={this.handleYearChange} minYear={this.state.minYear} maxYear={this.state.maxYear} /> : null}
                 </Row>
                 <Row>
                 {this.state.movies.map(movie => <MovieCard key={movie.id} movie={movie} />)}
