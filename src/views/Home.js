@@ -1,14 +1,89 @@
 import React, { Component } from 'react';
 import Row from 'react-bootstrap/Row';
+import Filters from '../components/Filters';
 import MovieCard from '../components/MovieCard';
+import SearchBar from '../components/SearchBar';
 
 export default class Home extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            movies: [],
+            search: '',
+            providers: ['Amazon Prime', 'Disney+', 'HBO Max', 'Hulu', 'Netflix', 'Paramount+', 'Peacock', 'Peacock Premium', 'Showtime', 'Starz'],
+            selectedProviders: [],
+            genres: ['Action', 'Adventure', 'Animation', 'Anime', 'Comedy', 'Comic', 'Crime', 'Disaster', 'Drama', 'Dramedy', 'Fantasy', 'Horror', 'Musical', 'Mystery', 'RomCom', 'Romance', 'Sci-Fi', 'Sports', 'Thriller', 'Western'],
+            selectedGenres: [],
+        };
+    }
+
+    componentDidMount() {
+        fetch('/api/movies')
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            this.setState({ movies: data });
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.search !== this.state.search || prevState.selectedProviders !== this.state.selectedProviders || prevState.selectedGenres !== this.state.selectedGenres) {
+            const search = this.state.search;
+            const selectedProviders = this.state.selectedProviders.join(', ');
+            const selectedGenres = this.state.selectedGenres.join(', ');
+            fetch(`/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.setState({ movies: data });
+            });
+        }
+    }
+
+    handleSearch = (e) => {
+        const search = e.target.value;
+        fetch(`/api/movies?search=${search}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            this.setState({ movies: data });
+        });
+        this.setState({ search });
+    }
+
+    handleProviderChange = (e) => {
+        const selectedProvider = e.target.id.replace('+', '%2B');
+        const checkBoxValue = e.target.checked;
+        if (checkBoxValue) {
+            this.setState({ selectedProviders: [...this.state.selectedProviders, selectedProvider] });
+        } else {
+            const selectedProviders = this.state.selectedProviders.filter(provider => provider !== selectedProvider);
+            this.setState({ selectedProviders });
+        }
+    }
+
+    handleGenreChange = (e) => {
+        const selectedGenre = e.target.id;
+        const checkBoxValue = e.target.checked;
+        if (checkBoxValue) {
+            this.setState({ selectedGenres: [...this.state.selectedGenres, selectedGenre] });
+        } else {
+            const selectedGenres = this.state.selectedGenres.filter(provider => provider !== selectedGenre);
+            this.setState({ selectedGenres });
+        }
+    }
+
     render() {
         return (
             <div>
-                This is the Home View.
                 <Row>
-                {this.props.movies.map(movie => <MovieCard key={movie.id} movie={movie} />)}
+                    <SearchBar search={this.state.search} handleSearch={this.handleSearch} />
+                </Row>
+                <Row>
+                    <Filters providers={this.state.providers} handleProviderChange={this.handleProviderChange} genres={this.state.genres} handleGenreChange={this.handleGenreChange}/>
+                </Row>
+                <Row>
+                {this.state.movies.map(movie => <MovieCard key={movie.id} movie={movie} />)}
                 </Row>
             </div>
         )
