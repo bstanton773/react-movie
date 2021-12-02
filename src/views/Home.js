@@ -27,7 +27,6 @@ export default class Home extends Component {
         fetch('/api/movies')
         .then(res => res.json())
         .then(data => {
-            console.log(data);
             this.setState({ movies: data });
         });
     }
@@ -42,7 +41,6 @@ export default class Home extends Component {
             fetch(`/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}`)
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 this.setState({ movies: data });
             });
         }
@@ -53,7 +51,6 @@ export default class Home extends Component {
         fetch(`/api/movies?search=${search}`)
         .then(res => res.json())
         .then(data => {
-            console.log(data);
             this.setState({ movies: data });
         });
         this.setState({ search });
