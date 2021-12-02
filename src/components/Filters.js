@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
 import Form from 'react-bootstrap/Form';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
+const createSliderWithTooltip = Slider.createSliderWithTooltip;
+const Range = createSliderWithTooltip(Slider.Range);
 
 export default class Filters extends Component {
     render() {
@@ -23,6 +28,8 @@ export default class Filters extends Component {
                     }
                 )}
                 </Form.Group>
+                <Form.Label>Year: </Form.Label>
+                <Range allowCross={false} min={1960} max={2021} defaultValue={[this.props.minYear, this.props.maxYear]} onChange={this.props.handleYearChange} ariaLabelGroupForHandles={[this.props.minYear, this.props.maxYear]} pushable={true}/>
             </Form>
         )
     }
