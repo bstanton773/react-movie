@@ -3,8 +3,8 @@ import Container from 'react-bootstrap/Container';
 import Navigation from './components/Navigation';
 import { Route, Routes } from 'react-router-dom';
 import Home from './views/Home';
-import Test from './views/Test';
 import movies from './movies';
+import MovieDetail from './views/MovieDetail';
 
 
 export default class App extends Component {
@@ -22,7 +22,7 @@ export default class App extends Component {
       <Container>
         <Routes>
           <Route exact path="/" element={<Home movies={this.state.movies}/>} />
-          <Route exact path="/test" element={<Test />} />
+          <Route exact path="/movies/:id" element={<MovieDetail />} />
         </Routes>
       </Container>
       </>
