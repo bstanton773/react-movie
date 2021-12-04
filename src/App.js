@@ -21,7 +21,8 @@ export default class App extends Component {
             genres: ['Action', 'Adventure', 'Animation', 'Anime', 'Comedy', 'Comic', 'Crime', 'Disaster', 'Drama', 'Dramedy', 'Fantasy', 'Horror', 'Musical', 'Mystery', 'RomCom', 'Romance', 'Sci-Fi', 'Sports', 'Thriller', 'Western'],
             selectedGenres: [],
             minYear: 1900,
-            maxYear: thisYear
+            maxYear: thisYear,
+            currentPage: 1
         };
     }
 
@@ -34,13 +35,14 @@ export default class App extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.search !== this.state.search || prevState.selectedProviders !== this.state.selectedProviders || prevState.selectedGenres !== this.state.selectedGenres || prevState.minYear !== this.state.minYear || prevState.maxYear !== this.state.maxYear) {
+        if (prevState.search !== this.state.search || prevState.selectedProviders !== this.state.selectedProviders || prevState.selectedGenres !== this.state.selectedGenres || prevState.minYear !== this.state.minYear || prevState.maxYear !== this.state.maxYear || prevState.currentPage !== this.state.currentPage) {
             const search = this.state.search;
             const selectedProviders = this.state.selectedProviders.join(', ');
             const selectedGenres = this.state.selectedGenres.join(', ');
             const minYear = this.state.minYear;
             const maxYear = this.state.maxYear;
-            fetch(`/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}`)
+            const currentPage = this.state.currentPage;
+            fetch(`/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}&page=${currentPage}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ movies: data });
@@ -55,17 +57,17 @@ export default class App extends Component {
         .then(data => {
             this.setState({ movies: data });
         });
-        this.setState({ search });
+        this.setState({ search, currentPage: 1 });
     }
 
     handleProviderChange = (e) => {
         const selectedProvider = e.target.id.replace('+', '%2B');
         const checkBoxValue = e.target.checked;
         if (checkBoxValue) {
-            this.setState({ selectedProviders: [...this.state.selectedProviders, selectedProvider] });
+            this.setState({ selectedProviders: [...this.state.selectedProviders, selectedProvider], currentPage: 1 });
         } else {
             const selectedProviders = this.state.selectedProviders.filter(provider => provider !== selectedProvider);
-            this.setState({ selectedProviders });
+            this.setState({ selectedProviders, currentPage: 1 });
         }
     }
 
@@ -73,21 +75,25 @@ export default class App extends Component {
         const selectedGenre = e.target.id;
         const checkBoxValue = e.target.checked;
         if (checkBoxValue) {
-            this.setState({ selectedGenres: [...this.state.selectedGenres, selectedGenre] });
+            this.setState({ selectedGenres: [...this.state.selectedGenres, selectedGenre], currentPage: 1 });
         } else {
             const selectedGenres = this.state.selectedGenres.filter(provider => provider !== selectedGenre);
-            this.setState({ selectedGenres });
+            this.setState({ selectedGenres, currentPage: 1 });
         }
     }
 
     handleYearChange = (e) => {
         const minYear = e[0];
         const maxYear = e[1];
-        this.setState({ minYear, maxYear });
+        this.setState({ minYear, maxYear, currentPage: 1 });
     }
 
     handleFilter = (displayFilters) => {
         this.setState({ displayFilters });
+    }
+
+    handlePageChange = (currentPage) => {
+        this.setState({ currentPage });
     }
 
     render() {
@@ -107,11 +113,13 @@ export default class App extends Component {
                 selectedGenres={this.state.selectedGenres}
                 minYear={this.state.minYear}
                 maxYear={this.state.maxYear}
+                currentPage={this.state.currentPage}
                 handleSearch={this.handleSearch}
                 handleProviderChange={this.handleProviderChange}
                 handleGenreChange={this.handleGenreChange}
                 handleYearChange={this.handleYearChange}
                 handleFilter={this.handleFilter}
+                handlePageChange={this.handlePageChange}
                 />
             } />
             <Route exact path="/movies/:id" element={<MovieDetail />} />
