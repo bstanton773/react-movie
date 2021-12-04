@@ -23,7 +23,7 @@ export default class App extends Component {
             minYear: 1900,
             maxYear: thisYear,
             currentPage: 1,
-            apiBaseURL: window.location.origin === 'http://localhost:3000' ? 'http://localhost:5000' : 'https://movie-reviews-bstanton.herokuapp.com/'
+            apiBaseURL: window.location.origin === 'http://localhost:3000' ? 'http://localhost:5000' : 'https://movie-reviews-bstanton.herokuapp.com'
         };
     }
 
