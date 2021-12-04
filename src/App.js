@@ -22,12 +22,13 @@ export default class App extends Component {
             selectedGenres: [],
             minYear: 1900,
             maxYear: thisYear,
-            currentPage: 1
+            currentPage: 1,
+            apiBaseURL: window.location.origin === 'http://localhost:3000' ? 'http://localhost:5000' : 'https://movie-reviews-bstanton.herokuapp.com/'
         };
     }
 
     componentDidMount() {
-        fetch('/api/movies')
+        fetch(`${this.state.apiBaseURL}/api/movies`)
         .then(res => res.json())
         .then(movies => {
             this.setState({ movies });
@@ -42,7 +43,7 @@ export default class App extends Component {
             const minYear = this.state.minYear;
             const maxYear = this.state.maxYear;
             const currentPage = this.state.currentPage;
-            fetch(`/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}&page=${currentPage}`)
+            fetch(`${this.state.apiBaseURL}/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}&page=${currentPage}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ movies: data });
@@ -52,11 +53,6 @@ export default class App extends Component {
 
     handleSearch = (e) => {
         const search = e.target.value;
-        fetch(`/api/movies?search=${search}`)
-        .then(res => res.json())
-        .then(data => {
-            this.setState({ movies: data });
-        });
         this.setState({ search, currentPage: 1 });
     }
 
@@ -122,7 +118,7 @@ export default class App extends Component {
                 handlePageChange={this.handlePageChange}
                 />
             } />
-            <Route exact path="/movies/:id" element={<MovieDetail />} />
+            <Route exact path="/movies/:id" element={<MovieDetail apiBaseURL={this.state.apiBaseURL} />} />
             </Routes>
         </Container>
         </div>
