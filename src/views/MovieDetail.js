@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
-import Button from 'react-bootstrap/Button'
+import { Link, useParams, useLocation } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card'
+import CardGroup from 'react-bootstrap/CardGroup'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import MovieCard from '../components/MovieCard';
+import RecommendationCard from '../components/RecommendationCard';
+import Trailer from '../components/Trailer';
 
 export default function MovieDetail(props) {
     const { id } = useParams();
@@ -20,12 +22,28 @@ export default function MovieDetail(props) {
             setRecommendations(data.recommendations);
         })
     }, [id])
-    console.log(movie)
+    const location = useLocation();
+    const providerInfo = {
+        9: 'Amazon Prime',
+        337: 'Disney +',
+        384: 'HBO Max',
+        15: 'Hulu',
+        8: 'Netflix',
+        531: 'Paramount +',
+        386: 'Peacock',
+        387: 'Peacock Premium',
+        37: 'Showtime',
+        43: 'Starz'
+    }
+    console.log(location)
     return movie ? (
         <Card >
+            <Card.Body>
+            <Button variant="primary" as={Link} to='/'>Go Back</Button>
+            </Card.Body>
             <Row>
                 <Col md={2}>
-                    <Card.Img src={`https://image.tmdb.org/t/p/original${movie.poster}`} className='my-3 ms-3'/>
+                    <Card.Img src={`https://image.tmdb.org/t/p/original${movie.poster}`} className='my-3'/>
                 </Col>
                 <Col md={8}>
                     <Card.Body>
@@ -55,22 +73,37 @@ export default function MovieDetail(props) {
                 </Col>
             </Row>
             <Row>
+                <Col md={{span:8, offset:2}}>
+                <Trailer videoId={movie.video_key}/>
+                </Col>
+            </Row>
+            <Row>
                 <Col md={12}>
                     <Card.Body>
-                        <Card.Title>Providers</Card.Title>
-                        <Card.Text>
+                        <Card.Title>Where To Watch</Card.Title>
+                        <Row>
                             {providers.map(provider => (
-                                <Button key={provider.id} variant="outline-primary" href={provider.url}>{provider.movie}</Button>
+                                providerInfo[provider.provider_id] ? (
+                                    <a href={provider.url} target='_blank' rel='noopener noreferrer'>
+                                    <Button variant="outline-primary">{providerInfo[provider.provider_id]}</Button>
+                                    </a>
+                                ) : null
                             ))}
-                        </Card.Text>
+                        </Row>
                     </Card.Body>
                 </Col>
             </Row>
             <Row>
-                {recommendations.map(recommendation => (
-
-                    <MovieCard key={recommendation.id} movie={recommendation} />
-                ))}
+                <Col md={12}>
+                    <Card.Body>
+                        <Card.Title>Similar Flicks</Card.Title>
+                        <CardGroup>
+                            {recommendations.map(recommendation => (
+                                <RecommendationCard key={recommendation.id} recommendation={recommendation} />
+                            ))}
+                        </CardGroup>
+                    </Card.Body>
+                </Col>
             </Row>
         </Card>
     ) : null
