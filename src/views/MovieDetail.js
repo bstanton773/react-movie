@@ -14,14 +14,14 @@ export default function MovieDetail(props) {
     const [providers, setProviders] = useState([]);
     const [recommendations, setRecommendations] = useState([]);
     useEffect(() => {
-        fetch(`/api/movies/${id}`)
+        fetch(`${props.apiBaseURL}/api/movies/${id}`)
         .then(res => res.json())
         .then(data => {
             setMovie(data.movie_info);
             setProviders(data.providers);
             setRecommendations(data.recommendations);
         })
-    }, [id])
+    }, [id, props.apiBaseURL])
     const location = useLocation();
     const providerInfo = {
         9: 'Amazon Prime',

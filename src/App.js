@@ -3,8 +3,13 @@ import Container from 'react-bootstrap/Container';
 import Navigation from './components/Navigation';
 import { Route, Routes } from 'react-router-dom';
 import Home from './views/Home';
-// import movies from './movies';
 import MovieDetail from './views/MovieDetail';
+import Register from './views/Register';
+import AlertMessage from './components/AlertMessage';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+
+library.add(fab);
 
 
 export default class App extends Component {
@@ -22,12 +27,16 @@ export default class App extends Component {
             selectedGenres: [],
             minYear: 1900,
             maxYear: thisYear,
-            currentPage: 1
+            currentPage: 1,
+            apiBaseURL: window.location.origin === 'http://localhost:3000' ? 'http://localhost:5000' : 'https://movie-reviews-bstanton.herokuapp.com',
+            userMessage: null,
+            showMessage: false,
+            categoryMessage: null,
         };
     }
 
     componentDidMount() {
-        fetch('/api/movies')
+        fetch(`${this.state.apiBaseURL}/api/movies`)
         .then(res => res.json())
         .then(movies => {
             this.setState({ movies });
@@ -42,7 +51,7 @@ export default class App extends Component {
             const minYear = this.state.minYear;
             const maxYear = this.state.maxYear;
             const currentPage = this.state.currentPage;
-            fetch(`/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}&page=${currentPage}`)
+            fetch(`${this.state.apiBaseURL}/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}&page=${currentPage}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ movies: data });
@@ -52,11 +61,6 @@ export default class App extends Component {
 
     handleSearch = (e) => {
         const search = e.target.value;
-        fetch(`/api/movies?search=${search}`)
-        .then(res => res.json())
-        .then(data => {
-            this.setState({ movies: data });
-        });
         this.setState({ search, currentPage: 1 });
     }
 
@@ -96,36 +100,67 @@ export default class App extends Component {
         this.setState({ currentPage });
     }
 
+    handleMessage = (message, category) => {
+        this.setState({ userMessage: message, showMessage: true, categoryMessage: category });
+    }
+
+    closeAlert = () => {
+        this.setState({ showMessage: false });
+    }
+
+    register = async (email, username, password) => {
+        let res = await fetch(`${this.state.apiBaseURL}/api/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                username,
+                password
+            })
+        })
+        let data = await res.json()
+        return await data
+    }
+
     render() {
         return (
-        <div className='bg-dark'>
+        <>
         <Navigation />
-        <Container>
+        <Container className='pt-5'>
+            <AlertMessage message={this.state.userMessage} show={this.state.showMessage} category={this.state.categoryMessage} closeAlert={this.closeAlert}/>
             <Routes>
-            <Route exact path="/" element={
-            <Home 
-                movies={this.state.movies}
-                search={this.state.search}
-                displayFilters={this.state.displayFilters}
-                providers={this.state.providers}
-                selectedProviders={this.state.selectedProviders}
-                genres={this.state.genres}
-                selectedGenres={this.state.selectedGenres}
-                minYear={this.state.minYear}
-                maxYear={this.state.maxYear}
-                currentPage={this.state.currentPage}
-                handleSearch={this.handleSearch}
-                handleProviderChange={this.handleProviderChange}
-                handleGenreChange={this.handleGenreChange}
-                handleYearChange={this.handleYearChange}
-                handleFilter={this.handleFilter}
-                handlePageChange={this.handlePageChange}
-                />
-            } />
-            <Route exact path="/movies/:id" element={<MovieDetail />} />
+                <Route exact path="/" element={
+                    <Home 
+                    movies={this.state.movies}
+                    search={this.state.search}
+                    displayFilters={this.state.displayFilters}
+                    providers={this.state.providers}
+                    selectedProviders={this.state.selectedProviders}
+                    genres={this.state.genres}
+                    selectedGenres={this.state.selectedGenres}
+                    minYear={this.state.minYear}
+                    maxYear={this.state.maxYear}
+                    currentPage={this.state.currentPage}
+                    handleSearch={this.handleSearch}
+                    handleProviderChange={this.handleProviderChange}
+                    handleGenreChange={this.handleGenreChange}
+                    handleYearChange={this.handleYearChange}
+                    handleFilter={this.handleFilter}
+                    handlePageChange={this.handlePageChange}
+                    />
+                } />
+                <Route exact path="/movies/:id" element={<MovieDetail apiBaseURL={this.state.apiBaseURL} />} />
+                <Route exact path="/register" element={
+                    <Register 
+                    register={this.register}
+                    handleMessage={this.handleMessage}
+                    />
+                } />
             </Routes>
         </Container>
-        </div>
+        </>
         )
     }
 }

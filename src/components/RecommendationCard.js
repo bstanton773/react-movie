@@ -7,7 +7,7 @@ export default class RecommendationCard extends Component {
     render() {
         const recommendation = this.props.recommendation
         return (
-            <Card className='my-3 mh-1'>
+            <Card className='my-3'>
                 <Card.Img variant="top" src={`https://image.tmdb.org/t/p/original${recommendation.poster}`} className='p-3'/>
                 <Card.Body>
                     <Card.Title>{ recommendation.movie.endsWith('The') ? `The ${recommendation.movie.slice(0,-5)}` : recommendation.movie}</Card.Title>

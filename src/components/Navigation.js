@@ -7,13 +7,13 @@ import { Link } from 'react-router-dom';
 export default class Navigation extends Component {
     render() {
         return (
-            <Navbar bg="light" variant="light" expand="lg">
+            <Navbar bg="light" variant="light" expand="lg" className='px-3' fixed='top'>
                 <Navbar.Brand as={Link} to='/'>My Movie List</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to='/'>Home</Nav.Link>
-                        <Nav.Link as={Link} to='/test'>Test</Nav.Link>
+                        <Nav.Link as={Link} to='/register'>Register</Nav.Link>
                     </Nav>
                     <Nav className="ms-auto">
                         <NavDropdown title="My Account" id="basic-nav-dropdown-end" align="end">
