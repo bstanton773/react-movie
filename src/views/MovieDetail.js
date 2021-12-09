@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card'
 import CardGroup from 'react-bootstrap/CardGroup'
@@ -21,8 +21,8 @@ export default function MovieDetail(props) {
             setProviders(data.providers);
             setRecommendations(data.recommendations);
         })
+        window.scrollTo(0, 0);
     }, [id, props.apiBaseURL])
-    const location = useLocation();
     const providerInfo = {
         9: 'Amazon Prime',
         337: 'Disney +',
@@ -35,7 +35,6 @@ export default function MovieDetail(props) {
         37: 'Showtime',
         43: 'Starz'
     }
-    console.log(location)
     return movie ? (
         <Card >
             <Card.Body>
@@ -84,7 +83,7 @@ export default function MovieDetail(props) {
                         <Row>
                             {providers.map(provider => (
                                 providerInfo[provider.provider_id] ? (
-                                    <a href={provider.url} target='_blank' rel='noopener noreferrer'>
+                                    <a key={provider.provider_id} href={provider.url} target='_blank' rel='noopener noreferrer'>
                                     <Button variant="outline-primary">{providerInfo[provider.provider_id]}</Button>
                                     </a>
                                 ) : null

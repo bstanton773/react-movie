@@ -27,7 +27,7 @@ export default class App extends Component {
             selectedGenres: [],
             minYear: 1900,
             maxYear: thisYear,
-            sortBy: '',
+            sortBy: 'rating@ASC',
             currentPage: 1,
             apiBaseURL: window.location.origin === 'http://localhost:3000' ? 'http://localhost:5000' : 'https://movie-reviews-bstanton.herokuapp.com',
             userMessage: null,
@@ -105,6 +105,7 @@ export default class App extends Component {
 
     handlePageChange = (currentPage) => {
         this.setState({ currentPage });
+        window.scrollTo(0, 0);
     }
 
     handleMessage = (message, category) => {
