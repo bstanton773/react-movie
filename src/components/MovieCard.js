@@ -10,7 +10,7 @@ export default class MovieCard extends Component {
         return (
             <Col className='py-3' xs={6} md={4} xl={2}>
                 <Card className='mt-3 h-100'>
-                    <Card.Img variant="top" src={`https://image.tmdb.org/t/p/original${movie.poster}`} />
+                    <Card.Img src={`https://image.tmdb.org/t/p/original${movie.poster}`} />
                     <Card.Body className='pb-0'>
                         <Card.Title>{ movie.movie.endsWith('The') ? `The ${movie.movie.slice(0,-5)}` : movie.movie}</Card.Title>
                         <Card.Text>{movie.year}</Card.Text>

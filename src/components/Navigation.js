@@ -8,7 +8,9 @@ export default class Navigation extends Component {
     render() {
         return (
             <Navbar bg="light" variant="light" expand="lg" className='px-3' fixed='top'>
-                <Navbar.Brand as={Link} to='/'>My Movie List</Navbar.Brand>
+                <a className="navbar-brand" href="/">
+                    My Movie List
+                </a>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
