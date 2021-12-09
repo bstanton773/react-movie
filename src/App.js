@@ -27,6 +27,7 @@ export default class App extends Component {
             selectedGenres: [],
             minYear: 1900,
             maxYear: thisYear,
+            sortBy: '',
             currentPage: 1,
             apiBaseURL: window.location.origin === 'http://localhost:3000' ? 'http://localhost:5000' : 'https://movie-reviews-bstanton.herokuapp.com',
             userMessage: null,
@@ -44,14 +45,15 @@ export default class App extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.search !== this.state.search || prevState.selectedProviders !== this.state.selectedProviders || prevState.selectedGenres !== this.state.selectedGenres || prevState.minYear !== this.state.minYear || prevState.maxYear !== this.state.maxYear || prevState.currentPage !== this.state.currentPage) {
+        if (prevState.search !== this.state.search || prevState.selectedProviders !== this.state.selectedProviders || prevState.selectedGenres !== this.state.selectedGenres || prevState.minYear !== this.state.minYear || prevState.maxYear !== this.state.maxYear || prevState.currentPage !== this.state.currentPage || prevState.sortBy !== this.state.sortBy) {
             const search = this.state.search;
             const selectedProviders = this.state.selectedProviders.join(', ');
             const selectedGenres = this.state.selectedGenres.join(', ');
             const minYear = this.state.minYear;
             const maxYear = this.state.maxYear;
             const currentPage = this.state.currentPage;
-            fetch(`${this.state.apiBaseURL}/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}&page=${currentPage}`)
+            const sortBy = this.state.sortBy;
+            fetch(`${this.state.apiBaseURL}/api/movies?search=${search}&providers=${selectedProviders}&genres=${selectedGenres}&minYear=${minYear}&maxYear=${maxYear}&page=${currentPage}&sortBy=${sortBy}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({ movies: data });
@@ -90,6 +92,11 @@ export default class App extends Component {
         const minYear = e[0];
         const maxYear = e[1];
         this.setState({ minYear, maxYear, currentPage: 1 });
+    }
+
+    handleSort = (e) => {
+        const sortBy = e.target.value;
+        this.setState({ sortBy, currentPage: 1 });
     }
 
     handleFilter = (displayFilters) => {
@@ -147,6 +154,7 @@ export default class App extends Component {
                     handleProviderChange={this.handleProviderChange}
                     handleGenreChange={this.handleGenreChange}
                     handleYearChange={this.handleYearChange}
+                    handleSort={this.handleSort}
                     handleFilter={this.handleFilter}
                     handlePageChange={this.handlePageChange}
                     />
