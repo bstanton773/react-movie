@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Navigation from './components/Navigation';
 import { Route, Routes } from 'react-router-dom';
 import Home from './views/Home';
+import Login from './views/Login';
 import MovieDetail from './views/MovieDetail';
 import Register from './views/Register';
 import AlertMessage from './components/AlertMessage';
@@ -164,6 +165,12 @@ export default class App extends Component {
                 <Route exact path="/register" element={
                     <Register 
                     register={this.register}
+                    handleMessage={this.handleMessage}
+                    />
+                } />
+                <Route exact path="/login" element={
+                    <Login
+                    login={this.login}
                     handleMessage={this.handleMessage}
                     />
                 } />
