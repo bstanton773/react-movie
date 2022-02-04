@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card'
-import CardGroup from 'react-bootstrap/CardGroup'
+// import CardGroup from 'react-bootstrap/CardGroup'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import RecommendationCard from '../components/RecommendationCard';
@@ -36,7 +36,7 @@ export default function MovieDetail(props) {
         43: 'Starz'
     }
     return movie ? (
-        <Card >
+        <Card bg="dark" text="white">
             <Card.Body>
             <Button variant="primary" as={Link} to='/'>Go Back</Button>
             </Card.Body>
@@ -78,9 +78,10 @@ export default function MovieDetail(props) {
             </Row>
             <Row>
                 <Col md={12}>
-                    <Card.Body>
                         <Card.Title>Where To Watch</Card.Title>
+                    <Card.Body>
                         <Row>
+                            <Col>
                             {providers.map(provider => (
                                 providerInfo[provider.provider_id] ? (
                                     <a key={provider.provider_id} href={provider.url} target='_blank' rel='noopener noreferrer'>
@@ -88,20 +89,17 @@ export default function MovieDetail(props) {
                                     </a>
                                 ) : null
                             ))}
+                            </Col>
                         </Row>
                     </Card.Body>
                 </Col>
             </Row>
             <Row>
-                <Col md={12}>
-                    <Card.Body>
-                        <Card.Title>Similar Flicks</Card.Title>
-                        <CardGroup>
-                            {recommendations.map(recommendation => (
-                                <RecommendationCard key={recommendation.id} recommendation={recommendation} />
-                            ))}
-                        </CardGroup>
-                    </Card.Body>
+                <Col>
+                    <Card.Title>Similar Flicks</Card.Title>
+                    <div className='d-flex overflow-auto'>
+                        {recommendations.map(recommendation => <RecommendationCard key={recommendation.id} recommendation={recommendation}/>)}
+                    </div>
                 </Col>
             </Row>
         </Card>

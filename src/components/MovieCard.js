@@ -8,16 +8,11 @@ export default class MovieCard extends Component {
     render() {
         const movie = this.props.movie;
         return (
-            <Col xs={6} md={4} xl={2}>
+            <Col xs={4} md={2}>
                 <Card className='mt-3'>
-                    <Card.Img src={`https://image.tmdb.org/t/p/original${movie.poster}`} />
-                    {/* <Card.Body className='pb-0'>
-                        <Card.Title>{ movie.movie.endsWith('The') ? `The ${movie.movie.slice(0,-5)}` : movie.movie}</Card.Title>
-                        <Card.Text>{movie.year}</Card.Text>
-                        <Card.Subtitle className="mb-2 text-muted">{movie.avgtotal}/100</Card.Subtitle>
-                    </Card.Body> */}
+                    <Card.Img src={`https://image.tmdb.org/t/p/original${movie.poster}`} variant="top" />
+                    <Button className='d-block' style={{"border-top-left-radius": "0px", "border-top-right-radius": "0px"}} as={Link} variant="primary" to={`/movies/${movie.id}`}>More Info</Button>
                 </Card>
-                <Button className='d-block' as={Link} variant="primary" to={`/movies/${movie.id}`}>More Info</Button>
             </Col>
         )
     }
