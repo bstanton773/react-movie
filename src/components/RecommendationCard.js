@@ -14,7 +14,7 @@ export default class RecommendationCard extends Component {
     render() {
         const recommendation = this.props.recommendation
         return (
-            <Card className='my-3' style={{minWidth: "25vw"}} onMouseEnter={() => this.setState({showInfo: true})} onMouseLeave={() => this.setState({showInfo: false})}>
+            <Card className='my-3' text='black' style={{minWidth: "25vw"}} onMouseEnter={() => this.setState({showInfo: true})} onMouseLeave={() => this.setState({showInfo: false})}>
                 { this.state.showInfo ? 
                 (
                     <>
