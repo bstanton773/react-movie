@@ -154,6 +154,7 @@ export default class App extends Component {
 
     logout = () => {
         localStorage.removeItem('token')
+        this.handleMessage('You have succesfully logged out.', 'warning')
         this.setState({
             isAuthenticated: false
         })
