@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
+import LoggedInNav from './LoggedInNav';
+import LoggedOutNav from './LoggedOutNav';
 
 export default class Navigation extends Component {
     render() {
@@ -18,13 +19,7 @@ export default class Navigation extends Component {
                         <Nav.Link as={Link} to='/register'>Register</Nav.Link>
                     </Nav>
                     <Nav className="ms-auto">
-                        <NavDropdown title="My Account" id="basic-nav-dropdown-end" align="end">
-                            <NavDropdown.Item href="#action/3.1">Action 1</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                        </NavDropdown>
+                        {this.props.isAuthenticated ? <LoggedInNav logout={this.props.logout} /> : <LoggedOutNav /> }
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

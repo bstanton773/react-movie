@@ -10,17 +10,29 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            formSubmitted: false
+            formSubmitted: false,
+            redirect: false
         }
     };
 
-    handleLoginSumbit = (e) => {
+    componentDidUpdate(prevProps, prevState){
+        if (prevProps.isAuthenticated !== this.props.isAuthenticated){
+            this.setState({redirect:true})
+        }
+    }
+
+    handleLoginSumbit = async (e) => {
         e.preventDefault();
-        console.log(e.target.username.value);
+        const username = e.target.username.value;
+        const password = e.target.password.value;
+
+        this.props.login(username, password);
+        this.setState({formSubmitted:true})
+
     }
 
     render() {
-        return this.state.formSubmitted ? <Navigate to='/' /> :(
+        return this.state.redirect ? <Navigate to='/' /> :(
             <div className="bg-light rounded my-5 p-5">
                 <h1 className="mb-3">Login</h1>
                 <Form onSubmit={this.handleLoginSumbit}>

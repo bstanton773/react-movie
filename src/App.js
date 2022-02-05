@@ -34,6 +34,7 @@ export default class App extends Component {
             userMessage: null,
             showMessage: false,
             categoryMessage: null,
+            isAuthenticated: localStorage.getItem('token') ? true : false
         };
     }
 
@@ -133,10 +134,35 @@ export default class App extends Component {
         return await data
     }
 
+    login = async (username, password) => {
+        let res = await fetch(`${this.state.apiBaseURL}/api/token`, {
+            headers: {
+                'Authorization': 'Basic ' + btoa(`${username}:${password}`)
+            }
+        })
+        let data = await res.json()
+        if (data.status === 'error'){
+            this.handleMessage(data.message, 'danger')
+        } else {
+            this.handleMessage(`You have succesfully logged in!`, 'success')
+            this.setState({
+                isAuthenticated: true
+            })
+        }
+        localStorage.setItem('token', data.token)
+    }
+
+    logout = () => {
+        localStorage.removeItem('token')
+        this.setState({
+            isAuthenticated: false
+        })
+    }
+
     render() {
         return (
         <>
-        <Navigation />
+        <Navigation isAuthenticated={this.state.isAuthenticated} logout={this.logout}/>
         <Container className='pt-5'>
             <AlertMessage message={this.state.userMessage} show={this.state.showMessage} category={this.state.categoryMessage} closeAlert={this.closeAlert}/>
             <Routes>
@@ -172,6 +198,7 @@ export default class App extends Component {
                     <Login
                     login={this.login}
                     handleMessage={this.handleMessage}
+                    isAuthenticated={this.state.isAuthenticated}
                     />
                 } />
             </Routes>
