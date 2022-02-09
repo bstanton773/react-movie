@@ -9,6 +9,9 @@ import Register from './views/Register';
 import AlertMessage from './components/AlertMessage';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
+import Watchlist from './views/Watchlist';
+import MyRatings from './views/MyRatings';
+import Following from './views/Following';
 
 library.add(fab);
 
@@ -202,6 +205,9 @@ export default class App extends Component {
                     isAuthenticated={this.state.isAuthenticated}
                     />
                 } />
+                <Route exact path="/watchlist" element={<Watchlist />} />
+                <Route exact path="/my-ratings" element={<MyRatings />} />
+                <Route exact path="/following" element={<Following />} />
             </Routes>
         </Container>
         </>

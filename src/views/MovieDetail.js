@@ -36,7 +36,7 @@ export default function MovieDetail(props) {
         43: 'Starz'
     }
     return movie ? (
-        <Card bg="dark" text="white">
+        <Card bg="dark">
             <Card.Body>
             <Button variant="primary" as={Link} to='/'>Go Back</Button>
             </Card.Body>
