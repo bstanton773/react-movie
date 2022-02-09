@@ -205,7 +205,7 @@ export default class App extends Component {
                     isAuthenticated={this.state.isAuthenticated}
                     />
                 } />
-                <Route exact path="/watchlist" element={<Watchlist />} />
+                <Route exact path="/watchlist" element={<Watchlist apiBaseURL={this.state.apiBaseURL} />} />
                 <Route exact path="/my-ratings" element={<MyRatings />} />
                 <Route exact path="/following" element={<Following />} />
             </Routes>
