@@ -16,7 +16,6 @@ export default class Navigation extends Component {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to='/'>Home</Nav.Link>
-                        <Nav.Link as={Link} to='/register'>Register</Nav.Link>
                     </Nav>
                     <Nav className="ms-auto">
                         {this.props.isAuthenticated ? <LoggedInNav logout={this.props.logout} /> : <LoggedOutNav /> }
