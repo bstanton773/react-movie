@@ -33,7 +33,7 @@ export default class Login extends Component {
 
     render() {
         return this.state.redirect ? <Navigate to='/' /> :(
-            <div className="bg-light rounded my-5 p-5">
+            <div className="rounded my-5 p-5">
                 <h1 className="mb-3">Login</h1>
                 <Form onSubmit={this.handleLoginSumbit}>
 

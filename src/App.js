@@ -151,8 +151,8 @@ export default class App extends Component {
             this.setState({
                 isAuthenticated: true
             })
+            localStorage.setItem('token', data.token)
         }
-        localStorage.setItem('token', data.token)
     }
 
     logout = () => {
