@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card'
-import CardGroup from 'react-bootstrap/CardGroup'
+// import CardGroup from 'react-bootstrap/CardGroup'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import RecommendationCard from '../components/RecommendationCard';
@@ -13,6 +13,8 @@ export default function MovieDetail(props) {
     const [movie, setMovie] = useState(null);
     const [providers, setProviders] = useState([]);
     const [recommendations, setRecommendations] = useState([]);
+    const navigate = useNavigate()
+    console.log(navigate)
     useEffect(() => {
         fetch(`${props.apiBaseURL}/api/movies/${id}`)
         .then(res => res.json())
@@ -21,8 +23,8 @@ export default function MovieDetail(props) {
             setProviders(data.providers);
             setRecommendations(data.recommendations);
         })
+        window.scrollTo(0, 0);
     }, [id, props.apiBaseURL])
-    const location = useLocation();
     const providerInfo = {
         9: 'Amazon Prime',
         337: 'Disney +',
@@ -35,11 +37,30 @@ export default function MovieDetail(props) {
         37: 'Showtime',
         43: 'Starz'
     }
-    console.log(location)
+    const addToWatchlist = (movieId) => {
+        const token = localStorage.getItem('token')
+
+        const myHeaders = new Headers();
+        myHeaders.append('Authorization', `Bearer ${token}`)
+        fetch(`${props.apiBaseURL}/api/add-to-watchlist/${movieId}`, {
+            method: 'POST',
+            headers: myHeaders
+        }).then(res => res.json())
+            .then(data => {
+                if (data.status === 'success'){
+                    props.handleMessage(data.message, 'success')
+                }
+            })
+    }
+
+    const goBack = () => {
+        navigate(-1)
+    }
+
     return movie ? (
-        <Card >
+        <Card bg="dark">
             <Card.Body>
-            <Button variant="primary" as={Link} to='/'>Go Back</Button>
+            <Button variant="primary" onClick={goBack}>Go Back</Button>
             </Card.Body>
             <Row>
                 <Col md={2}>
@@ -68,7 +89,11 @@ export default function MovieDetail(props) {
                         </Card.Text>
                     </Card.Body>
                 </Col>
-                <Col md={2}>
+                <Col md={2} className='mb-3'>
+                    {props.isAuthenticated ? (<div className="d-grid">
+                    <Button variant="success" className="d-block" onClick={() => addToWatchlist(movie.id)}>Add To Watchlist</Button>
+                    </div>): null}
+                    
                     
                 </Col>
             </Row>
@@ -79,30 +104,28 @@ export default function MovieDetail(props) {
             </Row>
             <Row>
                 <Col md={12}>
-                    <Card.Body>
                         <Card.Title>Where To Watch</Card.Title>
+                    <Card.Body>
                         <Row>
+                            <Col>
                             {providers.map(provider => (
                                 providerInfo[provider.provider_id] ? (
-                                    <a href={provider.url} target='_blank' rel='noopener noreferrer'>
+                                    <a key={provider.provider_id} href={provider.url} target='_blank' rel='noopener noreferrer'>
                                     <Button variant="outline-primary">{providerInfo[provider.provider_id]}</Button>
                                     </a>
                                 ) : null
                             ))}
+                            </Col>
                         </Row>
                     </Card.Body>
                 </Col>
             </Row>
             <Row>
-                <Col md={12}>
-                    <Card.Body>
-                        <Card.Title>Similar Flicks</Card.Title>
-                        <CardGroup>
-                            {recommendations.map(recommendation => (
-                                <RecommendationCard key={recommendation.id} recommendation={recommendation} />
-                            ))}
-                        </CardGroup>
-                    </Card.Body>
+                <Col>
+                    <Card.Title>Similar Flicks</Card.Title>
+                    <div className='d-flex overflow-auto'>
+                        {recommendations.map(recommendation => <RecommendationCard key={recommendation.id} recommendation={recommendation}/>)}
+                    </div>
                 </Col>
             </Row>
         </Card>
