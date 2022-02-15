@@ -37,7 +37,7 @@ export default class App extends Component {
             userMessage: null,
             showMessage: false,
             categoryMessage: null,
-            isAuthenticated: localStorage.getItem('token') ? true : false
+            isAuthenticated: localStorage.getItem('token') && new Date(localStorage.getItem('expiration')) > today ? true : false
         };
     }
 
@@ -152,6 +152,7 @@ export default class App extends Component {
                 isAuthenticated: true
             })
             localStorage.setItem('token', data.token)
+            localStorage.setItem('expiration', new Date(data.token_expiration))
         }
     }
 
