@@ -9,6 +9,9 @@ import Register from './views/Register';
 import AlertMessage from './components/AlertMessage';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
+import Watchlist from './views/Watchlist';
+import MyRatings from './views/MyRatings';
+import Following from './views/Following';
 
 library.add(fab);
 
@@ -148,8 +151,8 @@ export default class App extends Component {
             this.setState({
                 isAuthenticated: true
             })
+            localStorage.setItem('token', data.token)
         }
-        localStorage.setItem('token', data.token)
     }
 
     logout = () => {
@@ -188,7 +191,13 @@ export default class App extends Component {
                     handlePageChange={this.handlePageChange}
                     />
                 } />
-                <Route exact path="/movies/:id" element={<MovieDetail apiBaseURL={this.state.apiBaseURL} />} />
+                <Route exact path="/movies/:id" element={
+                    <MovieDetail 
+                    apiBaseURL={this.state.apiBaseURL} 
+                    handleMessage={this.handleMessage}
+                    isAuthenticated={this.state.isAuthenticated}
+                    />
+                }/>
                 <Route exact path="/register" element={
                     <Register 
                     register={this.register}
@@ -202,6 +211,14 @@ export default class App extends Component {
                     isAuthenticated={this.state.isAuthenticated}
                     />
                 } />
+                <Route exact path="/watchlist" element={
+                    <Watchlist 
+                    apiBaseURL={this.state.apiBaseURL}
+                    handleMessage={this.handleMessage}
+                    />
+                } />
+                <Route exact path="/my-ratings" element={<MyRatings />} />
+                <Route exact path="/following" element={<Following />} />
             </Routes>
         </Container>
         </>

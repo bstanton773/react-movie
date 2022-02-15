@@ -11,7 +11,7 @@ export default class Filters extends Component {
         let today = new Date();
         let thisYear = today.getFullYear();
         return (
-            <Form className='bg-light rounded'>
+            <Form className='bg-dark rounded'>
                 <Form.Label>Providers: </Form.Label>
                 <Form.Group controlId="formProviders">
                     {this.props.providers.map((provider, index) => {

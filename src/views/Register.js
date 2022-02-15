@@ -35,7 +35,7 @@ export default class Register extends Component {
 
     render() {
         return this.state.formSubmitted ? <Navigate to='/' /> :(
-            <div className="bg-light rounded my-5 p-5">
+            <div className="rounded my-5 p-5">
                 <h1 className="mb-3">Create Account</h1>
                 <Form onSubmit={this.handleRegisterSumbit}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
