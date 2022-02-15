@@ -37,16 +37,16 @@ export default class App extends Component {
             userMessage: null,
             showMessage: false,
             categoryMessage: null,
-            isAuthenticated: localStorage.getItem('token') && new Date(localStorage.getItem('expiration')) > today ? true : false
+            isAuthenticated: localStorage.getItem('token') && new Date(localStorage.getItem('expiration')) > today ? true : false,
+            user: null
         };
     }
 
-    componentDidMount() {
-        fetch(`${this.state.apiBaseURL}/api/movies`)
-        .then(res => res.json())
-        .then(movies => {
-            this.setState({ movies });
-        });
+    async componentDidMount() {
+        const res = await fetch(`${this.state.apiBaseURL}/api/movies`)
+        const movies = await res.json()
+        const user = await this.getUser()
+        this.setState({ movies, user })
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -63,7 +63,22 @@ export default class App extends Component {
             .then(data => {
                 this.setState({ movies: data });
             });
+        } else if (prevState.isAuthenticated !== this.state.isAuthenticated){
+            console.log('Yo')
+            this.getUser().then(user => this.setState({ user }))
         }
+    }
+
+    getUser = async () => {
+        if (this.state.isAuthenticated){
+            const myHeaders = new Headers();
+            const token = localStorage.getItem('token')
+            myHeaders.append('Authorization', `Bearer ${token}`)
+            const res = await fetch(`${this.state.apiBaseURL}/api/me`, {headers:myHeaders})
+            const data = await res.json()
+            return await data
+        }
+        return null
     }
 
     handleSearch = (e) => {
@@ -148,11 +163,11 @@ export default class App extends Component {
             this.handleMessage(data.message, 'danger')
         } else {
             this.handleMessage(`You have succesfully logged in!`, 'success')
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('expiration', new Date(data.token_expiration))
             this.setState({
                 isAuthenticated: true
             })
-            localStorage.setItem('token', data.token)
-            localStorage.setItem('expiration', new Date(data.token_expiration))
         }
     }
 
@@ -160,7 +175,8 @@ export default class App extends Component {
         localStorage.removeItem('token')
         this.handleMessage('You have succesfully logged out.', 'warning')
         this.setState({
-            isAuthenticated: false
+            isAuthenticated: false,
+            user: null
         })
     }
 
