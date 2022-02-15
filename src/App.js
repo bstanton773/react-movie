@@ -191,7 +191,13 @@ export default class App extends Component {
                     handlePageChange={this.handlePageChange}
                     />
                 } />
-                <Route exact path="/movies/:id" element={<MovieDetail apiBaseURL={this.state.apiBaseURL} />} />
+                <Route exact path="/movies/:id" element={
+                    <MovieDetail 
+                    apiBaseURL={this.state.apiBaseURL} 
+                    handleMessage={this.handleMessage}
+                    isAuthenticated={this.state.isAuthenticated}
+                    />
+                }/>
                 <Route exact path="/register" element={
                     <Register 
                     register={this.register}
@@ -205,7 +211,12 @@ export default class App extends Component {
                     isAuthenticated={this.state.isAuthenticated}
                     />
                 } />
-                <Route exact path="/watchlist" element={<Watchlist apiBaseURL={this.state.apiBaseURL} />} />
+                <Route exact path="/watchlist" element={
+                    <Watchlist 
+                    apiBaseURL={this.state.apiBaseURL}
+                    handleMessage={this.handleMessage}
+                    />
+                } />
                 <Route exact path="/my-ratings" element={<MyRatings />} />
                 <Route exact path="/following" element={<Following />} />
             </Routes>

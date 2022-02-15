@@ -35,6 +35,21 @@ export default function MovieDetail(props) {
         37: 'Showtime',
         43: 'Starz'
     }
+    const addToWatchlist = (movieId) => {
+        const token = localStorage.getItem('token')
+
+        const myHeaders = new Headers();
+        myHeaders.append('Authorization', `Bearer ${token}`)
+        fetch(`${props.apiBaseURL}/api/add-to-watchlist/${movieId}`, {
+            method: 'POST',
+            headers: myHeaders
+        }).then(res => res.json())
+            .then(data => {
+                if (data.status === 'success'){
+                    props.handleMessage(data.message, 'success')
+                }
+            })
+    }
     return movie ? (
         <Card bg="dark">
             <Card.Body>
@@ -67,7 +82,11 @@ export default function MovieDetail(props) {
                         </Card.Text>
                     </Card.Body>
                 </Col>
-                <Col md={2}>
+                <Col md={2} className='mb-3'>
+                    {props.isAuthenticated ? (<div className="d-grid">
+                    <Button variant="success" className="d-block" onClick={() => addToWatchlist(movie.id)}>Add To Watchlist</Button>
+                    </div>): null}
+                    
                     
                 </Col>
             </Row>
