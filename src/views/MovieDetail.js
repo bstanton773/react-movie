@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card'
 // import CardGroup from 'react-bootstrap/CardGroup'
@@ -13,6 +13,8 @@ export default function MovieDetail(props) {
     const [movie, setMovie] = useState(null);
     const [providers, setProviders] = useState([]);
     const [recommendations, setRecommendations] = useState([]);
+    const navigate = useNavigate()
+    console.log(navigate)
     useEffect(() => {
         fetch(`${props.apiBaseURL}/api/movies/${id}`)
         .then(res => res.json())
@@ -50,10 +52,15 @@ export default function MovieDetail(props) {
                 }
             })
     }
+
+    const goBack = () => {
+        navigate(-1)
+    }
+
     return movie ? (
         <Card bg="dark">
             <Card.Body>
-            <Button variant="primary" as={Link} to='/'>Go Back</Button>
+            <Button variant="primary" onClick={goBack}>Go Back</Button>
             </Card.Body>
             <Row>
                 <Col md={2}>
