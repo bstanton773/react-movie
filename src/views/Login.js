@@ -11,7 +11,7 @@ export default class Login extends Component {
         super(props);
         this.state = {
             formSubmitted: false,
-            redirect: false
+            redirect: props.isAuthenticated
         }
     };
 

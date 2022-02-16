@@ -10,7 +10,7 @@ export default class Register extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            formSubmitted: false
+            formSubmitted: props.isAuthenticated
         }
     }
 

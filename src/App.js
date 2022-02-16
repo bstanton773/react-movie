@@ -223,6 +223,7 @@ export default class App extends Component {
                     <Register 
                     register={this.register}
                     handleMessage={this.handleMessage}
+                    isAuthenticated={this.state.isAuthenticated}
                     />
                 } />
                 <Route exact path="/login" element={
