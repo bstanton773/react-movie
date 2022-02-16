@@ -131,6 +131,7 @@ export default class App extends Component {
 
     handleMessage = (message, category) => {
         this.setState({ userMessage: message, showMessage: true, categoryMessage: category });
+        window.scrollTo(0, 0);
     }
 
     closeAlert = () => {
