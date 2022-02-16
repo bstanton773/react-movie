@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import Row  from 'react-bootstrap/Row'
-import WatchlistCard from '../components/WatchlistCard'
+import MovieCard from '../components/MovieCard'
+import { useNavigate } from 'react-router'
 
 export default function Watchlist(props) {
+  const navigate = useNavigate();
+  if (!props.isAuthenticated){
+    navigate('/login')
+    props.handleMessage('You must be logged in to view your watchlist', 'warning')
+  }
+  
   const [watchlist, setWatchlist] = useState([])
-  const getWatchlist = useCallback(() => {
+  useEffect(() => {
     const myHeaders = new Headers();
     const token = localStorage.getItem('token')
     myHeaders.append('Authorization', `Bearer ${token}`)
@@ -17,31 +24,12 @@ export default function Watchlist(props) {
     })
   }, [props.apiBaseURL])
 
-  useEffect(() => {
-    getWatchlist()
-  }, [getWatchlist])
-
-  const removeFromWatchlist = (movieId) => {
-    const myHeaders = new Headers();
-    const token = localStorage.getItem('token')
-    myHeaders.append('Authorization', `Bearer ${token}`)
-    fetch(`${props.apiBaseURL}/api/remove-from-watchlist/${movieId}`, {
-      method: 'DELETE',
-      headers: myHeaders
-    }).then(res => res.json())
-      .then(data => {
-        if (data.status === 'success'){
-          props.handleMessage(data.message, 'success')
-        }
-        getWatchlist()
-      })
-  }
   return (
     <>
     <h1 className='mt-3'>My Watchlist</h1>
     <hr />
     <Row>
-      {watchlist.map(movie => <WatchlistCard key={movie.id} movie={movie} removeFromWatchlist={removeFromWatchlist} />)}
+      {watchlist.map(movie => <MovieCard key={movie.id} movie={movie} />)}
     </Row>
     </>
   )

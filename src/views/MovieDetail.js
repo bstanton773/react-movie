@@ -14,7 +14,6 @@ export default function MovieDetail(props) {
     const [providers, setProviders] = useState([]);
     const [recommendations, setRecommendations] = useState([]);
     const navigate = useNavigate()
-    console.log(navigate)
     useEffect(() => {
         fetch(`${props.apiBaseURL}/api/movies/${id}`)
         .then(res => res.json())
@@ -38,9 +37,8 @@ export default function MovieDetail(props) {
         43: 'Starz'
     }
     const addToWatchlist = (movieId) => {
-        const token = localStorage.getItem('token')
-
         const myHeaders = new Headers();
+        const token = localStorage.getItem('token')
         myHeaders.append('Authorization', `Bearer ${token}`)
         fetch(`${props.apiBaseURL}/api/add-to-watchlist/${movieId}`, {
             method: 'POST',
@@ -49,9 +47,26 @@ export default function MovieDetail(props) {
             .then(data => {
                 if (data.status === 'success'){
                     props.handleMessage(data.message, 'success')
+                    props.getUser()
                 }
             })
     }
+
+    const removeFromWatchlist = (movieId) => {
+        const myHeaders = new Headers();
+        const token = localStorage.getItem('token')
+        myHeaders.append('Authorization', `Bearer ${token}`)
+        fetch(`${props.apiBaseURL}/api/remove-from-watchlist/${movieId}`, {
+          method: 'DELETE',
+          headers: myHeaders
+        }).then(res => res.json())
+          .then(data => {
+            if (data.status === 'success'){
+              props.handleMessage(data.message, 'success')
+              props.getUser()
+            }
+          })
+      }
 
     const goBack = () => {
         navigate(-1)
@@ -90,9 +105,21 @@ export default function MovieDetail(props) {
                     </Card.Body>
                 </Col>
                 <Col md={2} className='mb-3'>
-                    {props.isAuthenticated ? (<div className="d-grid">
-                    <Button variant="success" className="d-block" onClick={() => addToWatchlist(movie.id)}>Add To Watchlist</Button>
-                    </div>): null}
+                    {
+                        props.isAuthenticated && props.user ? props.user.watchlist.includes(movie.id) ? (
+                            <div className="d-grid">
+                            <Button variant="danger" className="d-block" onClick={() => removeFromWatchlist(movie.id)}>Remove From Watchlist</Button>
+                            </div>
+                        ) : (
+                            <div className="d-grid">
+                            <Button variant="success" className="d-block" onClick={() => addToWatchlist(movie.id)}>Add To Watchlist</Button>
+                            </div>
+                        ) : (
+                            <div className="d-grid">
+                            <Button variant="success" className="d-block" onClick={() => props.handleMessage('You must be logged in to add to watchlist', 'danger')}>Add To Watchlist</Button>
+                            </div>
+                        )
+                    }
                     
                     
                 </Col>

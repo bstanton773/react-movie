@@ -64,21 +64,22 @@ export default class App extends Component {
                 this.setState({ movies: data });
             });
         } else if (prevState.isAuthenticated !== this.state.isAuthenticated){
-            console.log('Yo')
-            this.getUser().then(user => this.setState({ user }))
+            this.getUser()
         }
     }
 
-    getUser = async () => {
+    getUser = () => {
         if (this.state.isAuthenticated){
             const myHeaders = new Headers();
             const token = localStorage.getItem('token')
             myHeaders.append('Authorization', `Bearer ${token}`)
-            const res = await fetch(`${this.state.apiBaseURL}/api/me`, {headers:myHeaders})
-            const data = await res.json()
-            return await data
+            fetch(`${this.state.apiBaseURL}/api/me`, {
+                headers:myHeaders
+            }).then(res => res.json())
+                .then(user => this.setState({user}))
+        } else {
+            this.setState({user:null})
         }
-        return null
     }
 
     handleSearch = (e) => {
@@ -213,6 +214,8 @@ export default class App extends Component {
                     apiBaseURL={this.state.apiBaseURL} 
                     handleMessage={this.handleMessage}
                     isAuthenticated={this.state.isAuthenticated}
+                    getUser={this.getUser}
+                    user={this.state.user}
                     />
                 }/>
                 <Route exact path="/register" element={
@@ -232,6 +235,8 @@ export default class App extends Component {
                     <Watchlist 
                     apiBaseURL={this.state.apiBaseURL}
                     handleMessage={this.handleMessage}
+                    isAuthenticated={this.state.isAuthenticated}
+                    user={this.state.user}
                     />
                 } />
                 <Route exact path="/my-ratings" element={<MyRatings />} />
