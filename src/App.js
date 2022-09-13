@@ -241,7 +241,14 @@ export default class App extends Component {
                     user={this.state.user}
                     />
                 } />
-                <Route exact path="/my-ratings" element={<MyRatings />} />
+                <Route exact path="/my-ratings" element={
+                    <MyRatings
+                    apiBaseURL={this.state.apiBaseURL}
+                    handleMessage={this.handleMessage}
+                    isAuthenticated={this.state.isAuthenticated}
+                    user={this.state.user}
+                    />
+                } />
                 <Route exact path="/following" element={<Following />} />
             </Routes>
         </Container>

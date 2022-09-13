@@ -72,6 +72,8 @@ export default function MovieDetail(props) {
         navigate(-1)
     }
 
+    let myRatings = props.user && movie ? props.user.ratings.filter(r => r.movie_id === movie.id) : null
+    console.log(myRatings)
     return movie ? (
         <Card bg="dark">
             <Card.Body>
@@ -80,6 +82,9 @@ export default function MovieDetail(props) {
             <Row>
                 <Col md={2}>
                     <Card.Img src={`https://image.tmdb.org/t/p/original${movie.poster}`} className='my-3'/>
+                            
+                    {myRatings && myRatings.length > 0 ? <h6>My Rating: {myRatings[0].rating}</h6> : null}
+                    
                 </Col>
                 <Col md={8}>
                     <Card.Body>
